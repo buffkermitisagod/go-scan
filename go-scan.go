@@ -9,6 +9,28 @@ import (
 	"time"
 )
 
+func col(c string) string {
+	if c == "res" {
+		return "\033[0m"
+	} else if c == "red" {
+		return "\033[31m"
+	} else if c == "green" {
+		return "\033[32m"
+	} else if c == "yellow" {
+		return "\033[33m"
+	} else if c == "blue" {
+		return "\033[34m"
+	} else if c == "purple" {
+		return "\033[35m"
+	} else if c == "cyan" {
+		return "\033[36m"
+	} else if c == "white" {
+		return "\033[37m"
+	} else {
+		return "\033[0m"
+	}
+}
+
 func scanPort(protocol, hostname string, port int) bool {
 	address := hostname + ":" + strconv.Itoa(port)
 	conn, err := net.DialTimeout(protocol, address, 60*time.Second)
@@ -54,7 +76,7 @@ func main() {
 	if len(args) <= 0 {
 		help()
 	} else if strings.Contains(args[0], ".") {
-		fmt.Println("[*] scanning ports...")
+		fmt.Println("[*] scanning ports on (" + col("red") + args[0] + col("res") + ")")
 
 		num_base, err := strconv.Atoi(strings.Split(ran, "-")[0])
 		if err != nil {
@@ -68,10 +90,10 @@ func main() {
 		for i := num_base; i != num_max; i++ {
 			data := scanPort(typ, args[0], i)
 			if data {
-				fmt.Println(i, " : open")
+				fmt.Println(i, " : "+col("green")+" OPEN "+col("res"))
 			} else {
 				if verb {
-					fmt.Println(i, " : closed")
+					fmt.Println(i, " :"+col("red")+" CLOSE "+col("res"))
 				}
 			}
 
